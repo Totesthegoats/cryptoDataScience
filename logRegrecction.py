@@ -15,13 +15,6 @@ raw_data =  pd.DataFrame(nasdaqdatalink.get("BCHAIN/MKPRU")).reset_index()
 raw_data['Date'] = pd.to_datetime(raw_data['Date']) # Ensure that the date is in datetime or graphs might look funny
 raw_data = raw_data[raw_data["Value"] > 0] # Drop all 0 values as they will fuck up the regression bands
 
-# raw_data = ticker.history(period="max", interval = '1d')
-# raw_data["Index"] = range(len(raw_data))
-# raw_data = raw_data.reset_index().set_index("Index")
-#raw_data = pd.read_csv("price_history.csv")
-# raw_data['Date'] = pd.to_datetime(raw_data['Date'])
-# raw_data = raw_data[raw_data["Value"] > 0]
-
 # this is your log fucyion,
 def logFunc(x,a,b,c):
     return a*np.log(b+x) + c
@@ -47,9 +40,6 @@ for i in range(-2,6):
     plt.plot(raw_data["Date"], np.exp(fittedYData + i*.455))
     #You can use the below plot fill between rather than the above line plot, I prefer the line graph
     #plt.fill_between(raw_data["Date"], np.exp(fittedYData + i*.45 -1), np.exp(fittedYData + i*.45), alpha=0.4)
-
-    #if raw_data.Value.iloc[-1] > np.exp(fittedYData + i*.45 -0.45)[-1] and raw_data.Value.iloc[-1] <  np.exp(fittedYData + i*.45)[-1]:
-        #print("Bitcoins price falls between $", np.exp(fittedYData + i*.45 -1)[-1], "and $",np.exp(fittedYData + i*.45)[-1], " therefore our multiplier is ", weighted[i] )
 
 # Back Testing
 df = raw_data

@@ -15,7 +15,7 @@ raw_data =  pd.DataFrame(nasdaqdatalink.get("BCHAIN/MKPRU")).reset_index()
 raw_data['Date'] = pd.to_datetime(raw_data['Date']) # Ensure that the date is in datetime or graphs might look funny
 raw_data = raw_data[raw_data["Value"] > 0] # Drop all 0 values as they will fuck up the regression bands
 
-# this is your log fucyion,
+# this is your log function
 def logFunc(x,a,b,c):
     return a*np.log(b+x) + c
 
@@ -33,20 +33,25 @@ fittedYData = logFunc(xdata, popt[0], popt[1], popt[2])
 plt.style.use("dark_background")
 # Plot in a with long Y axis
 plt.semilogy(raw_data["Date"], raw_data["Value"])
+plt.title('Bitcoin Rainbow Chart')
+plt.xlabel('Time')
+plt.ylabel('Bitcoin price in log scale')
 
 # Draw the rainbow bands
 for i in range(-2,6):
     raw_data[f"fitted_data{i}"] = np.exp(fittedYData + i*.455)
     plt.plot(raw_data["Date"], np.exp(fittedYData + i*.455))
     #You can use the below plot fill between rather than the above line plot, I prefer the line graph
-    #plt.fill_between(raw_data["Date"], np.exp(fittedYData + i*.45 -1), np.exp(fittedYData + i*.45), alpha=0.4)
+    plt.fill_between(raw_data["Date"], np.exp(fittedYData + i*.45 -1), np.exp(fittedYData + i*.45), alpha=0.4)
 
 # Back Testing
 df = raw_data
-# Change the DCA time frame here, daily = df[::1], weekly = [::7], biweekly = [::14], monthly = [::30], yearly = df[::365]
-monthly = df[::30].reset_index()
+# Change the DCA time frame here, daily = df[::1], weekly = [::7], biweekly = [::14], monthly = [::30], yearly = df[::365]]
+buyFrequency = 30
+monthly = df[::buyFrequency].reset_index()
 # Change the date you start to DCA here
-monthly = monthly[monthly['Date'] > '2019-01-01']
+startDate = '2019-01-01'
+monthly = monthly[monthly['Date'] > startDate]
 # Change your buy amount here
 buyAmount = 100
 totalDCA = 0
@@ -127,10 +132,36 @@ for x in range(0, len(monthly)):
 # This plots the locations of your buy points.
 plt.scatter(monthly["Date"],monthly["Value"], c="red")
 
-
 print("Total value RCA ", totalRCA)
 print("Total value DCA ", totalDCA)
 print(amount_invested_RCA)
 print(amount_invested_DCA)
 
 plt.show()
+
+print("\n")
+print("Buy Frequency: every", buyFrequency, "days")
+print("Strategy Starting Date:", startDate)
+print("Purchase Amount: $", buyAmount)
+
+print("\n")
+print("Color Band Multipliers:")
+for i in range(-2, 7)[::-1]:
+    print(weighted[i])
+
+print("\n")
+totalDCADollars = monthly.Value.iloc[len(monthly) - 1] * totalDCA
+percentGainsDCA = ((totalDCADollars / amount_invested_DCA) - 1) * 100
+print("Total Invested DCA: $", float("{:.2f}".format(amount_invested_DCA)))
+print("Total value DCA:",float("{:.4f}".format(totalDCA)), "BTC, or $", float("{:.2f}".format(totalDCADollars)))
+print("% Gains DCA:", float("{:.2f}".format(percentGainsDCA)), "%")
+
+print("\n")
+totalRCADollars = monthly.Value.iloc[len(monthly) - 1] * totalRCA
+percentGainsRCA = ((totalRCADollars / amount_invested_RCA) - 1) * 100
+print("Total Invested RCA: $",float("{:.2f}".format(amount_invested_RCA)))
+print("Total Value RCA:",float("{:.4f}".format(totalRCA)), "BTC, or $", float("{:.2f}".format(totalRCADollars)))
+print("% Gains RCA:", float("{:.2f}".format(percentGainsRCA)), "%")
+
+print("\n")
+print("RCA performance increase over DCA:", float("{:.2f}".format(((percentGainsRCA / percentGainsDCA) - 1) * 100)), "%")

@@ -58,7 +58,7 @@ totalDCA = 0
 totalRCA = 0
 amount_invested_DCA = 0
 amount_invested_RCA = 0
-fibs = {6:0, 5:0.1, 4:0.2, 3:0.3, 2:0.5, 1:0.8, 0:1.3,-1:2.1,-2:3.4}
+fibs = {"bubble":0, "sell":0.1, "FOMO":0.2, "Bubble?":0.3, "Hodl":0.5, "cheap":0.8, "accumulate":1.3,"Buy":2.1,"fire_sale":3.4}
 originalRCA = {6:0, 5:0.1, 4:0.2, 3:0.35, 2:0.5, 1:0.75, 0:1,-1:2.5,-2:3}
 # Choose what type of weightings you want to RCA with
 weighted = fibs
@@ -66,67 +66,67 @@ weighted = fibs
 for x in range(0, len(monthly)):
     # if below the first band the buy buyAmount*3.4 and so on for each successive line
     if monthly.Value.iloc[x] < monthly["fitted_data-2"].iloc[x]:
-        print("Bitcoin is below $", monthly["fitted_data-1"].iloc[x], " therefore our multiplier is ", weighted[-2])
+        print("Bitcoin is below $", monthly["fitted_data-1"].iloc[x], " therefore our multiplier is ", weighted["fire_sale"])
         totalDCA = totalDCA + buyAmount/monthly.Value.iloc[x]
-        totalRCA = totalRCA + buyAmount * weighted[-2] / monthly.Value.iloc[x]
-        amount_invested_RCA = amount_invested_RCA + buyAmount * weighted[-2]
+        totalRCA = totalRCA + buyAmount * weighted["fire_sale"] / monthly.Value.iloc[x]
+        amount_invested_RCA = amount_invested_RCA + buyAmount * weighted["fire_sale"]
         amount_invested_DCA = amount_invested_DCA + buyAmount
 
     elif monthly.Value.iloc[x] > monthly["fitted_data-2"].iloc[x] and monthly.Value.iloc[x] < monthly["fitted_data-1"].iloc[x]:
-        print("Bitcoin is below $", monthly["fitted_data-1"].iloc[x], " therefore our multiplier is ", weighted[-1])
+        print("Bitcoin is below $", monthly["fitted_data-1"].iloc[x], " therefore our multiplier is ", weighted["Buy"])
         totalDCA = totalDCA + buyAmount/monthly.Value.iloc[x]
-        totalRCA = totalRCA + buyAmount * weighted[-1] / monthly.Value.iloc[x]
-        amount_invested_RCA = amount_invested_RCA + buyAmount * weighted[-1]
+        totalRCA = totalRCA + buyAmount * weighted["Buy"] / monthly.Value.iloc[x]
+        amount_invested_RCA = amount_invested_RCA + buyAmount * weighted["Buy"]
         amount_invested_DCA = amount_invested_DCA + buyAmount
 
     elif monthly.Value.iloc[x] > monthly["fitted_data-1"].iloc[x] and monthly.Value.iloc[x] < monthly["fitted_data0"].iloc[x]:
-        print("Bitcoins price falls between $", monthly["fitted_data-1"].iloc[x], "and $", monthly["fitted_data0"].iloc[x], " therefore our multiplier is ", weighted[0])
+        print("Bitcoins price falls between $", monthly["fitted_data-1"].iloc[x], "and $", monthly["fitted_data0"].iloc[x], " therefore our multiplier is ", weighted["accumulate"])
         totalDCA = totalDCA + buyAmount/monthly.Value.iloc[x]
-        totalRCA = totalRCA + buyAmount * weighted[0] / monthly.Value.iloc[x]
-        amount_invested_RCA = amount_invested_RCA + buyAmount * weighted[0]
+        totalRCA = totalRCA + buyAmount * weighted["accumulate"] / monthly.Value.iloc[x]
+        amount_invested_RCA = amount_invested_RCA + buyAmount * weighted["accumulate"]
         amount_invested_DCA = amount_invested_DCA + buyAmount
 
 
     elif monthly.Value.iloc[x] > monthly["fitted_data0"].iloc[x] and monthly.Value.iloc[x] < monthly["fitted_data1"].iloc[x]:
-        print("Bitcoins price falls between $", monthly["fitted_data0"].iloc[x], "and $", monthly["fitted_data1"].iloc[x], " therefore our multiplier is ", weighted[1])
+        print("Bitcoins price falls between $", monthly["fitted_data0"].iloc[x], "and $", monthly["fitted_data1"].iloc[x], " therefore our multiplier is ", weighted["cheap"])
         totalDCA = totalDCA + buyAmount/monthly.Value.iloc[x]
-        totalRCA = totalRCA + buyAmount * weighted[1] / monthly.Value.iloc[x]
-        amount_invested_RCA = amount_invested_RCA + buyAmount * weighted[1]
+        totalRCA = totalRCA + buyAmount * weighted["cheap"] / monthly.Value.iloc[x]
+        amount_invested_RCA = amount_invested_RCA + buyAmount * weighted["cheap"]
         amount_invested_DCA = amount_invested_DCA + buyAmount
 
     elif monthly.Value.iloc[x] > monthly["fitted_data1"].iloc[x] and monthly.Value.iloc[x] < monthly["fitted_data2"].iloc[x]:
-        print("Bitcoins price falls between $", monthly["fitted_data1"].iloc[x], "and $", monthly["fitted_data2"].iloc[x], " therefore our multiplier is ", weighted[1])
+        print("Bitcoins price falls between $", monthly["fitted_data1"].iloc[x], "and $", monthly["fitted_data2"].iloc[x], " therefore our multiplier is ", weighted["Hodl"])
         totalDCA = totalDCA + buyAmount/monthly.Value.iloc[x]
-        totalRCA = totalRCA + buyAmount * weighted[1] / monthly.Value.iloc[x]
-        amount_invested_RCA = amount_invested_RCA + buyAmount * weighted[2]
+        totalRCA = totalRCA + buyAmount * weighted["Hodl"] / monthly.Value.iloc[x]
+        amount_invested_RCA = amount_invested_RCA + buyAmount * weighted["Hodl"]
         amount_invested_DCA = amount_invested_DCA + buyAmount
 
     elif monthly.Value.iloc[x] > monthly["fitted_data2"].iloc[x] and monthly.Value.iloc[x] < monthly["fitted_data3"].iloc[x]:
-        print("Bitcoins price falls between $", monthly["fitted_data2"].iloc[x], "and $", monthly["fitted_data3"].iloc[x], " therefore our multiplier is ", weighted[2])
+        print("Bitcoins price falls between $", monthly["fitted_data2"].iloc[x], "and $", monthly["fitted_data3"].iloc[x], " therefore our multiplier is ", weighted["Bubble?"])
         totalDCA = totalDCA + buyAmount/monthly.Value.iloc[x]
-        totalRCA = totalRCA + buyAmount * weighted[2] / monthly.Value.iloc[x]
-        amount_invested_RCA = amount_invested_RCA + buyAmount * weighted[2]
+        totalRCA = totalRCA + buyAmount * weighted["Bubble?"] / monthly.Value.iloc[x]
+        amount_invested_RCA = amount_invested_RCA + buyAmount * weighted["Bubble?"]
         amount_invested_DCA = amount_invested_DCA + buyAmount
 
     elif monthly.Value.iloc[x] > monthly["fitted_data3"].iloc[x] and monthly.Value.iloc[x] < monthly["fitted_data4"].iloc[x]:
-        print("Bitcoins price falls between $", monthly["fitted_data3"].iloc[x], "and $", monthly["fitted_data4"].iloc[x], " therefore our multiplier is ", weighted[3])
+        print("Bitcoins price falls between $", monthly["fitted_data3"].iloc[x], "and $", monthly["fitted_data4"].iloc[x], " therefore our multiplier is ", weighted["FOMO"])
         totalDCA = totalDCA + buyAmount/monthly.Value.iloc[x]
-        totalRCA = totalRCA + buyAmount * weighted[3] / monthly.Value.iloc[x]
-        amount_invested_RCA = amount_invested_RCA + buyAmount * weighted[3]
+        totalRCA = totalRCA + buyAmount * weighted["FOMO"] / monthly.Value.iloc[x]
+        amount_invested_RCA = amount_invested_RCA + buyAmount * weighted["FOMO"]
         amount_invested_DCA = amount_invested_DCA + buyAmount
 
     elif monthly.Value.iloc[x] > monthly["fitted_data4"].iloc[x] and monthly.Value.iloc[x] < monthly["fitted_data5"].iloc[x]:
-        print("Bitcoins price falls between $", monthly["fitted_data4"].iloc[x], "and $", monthly["fitted_data5"].iloc[x], " therefore our multiplier is ", weighted[4])
+        print("Bitcoins price falls between $", monthly["fitted_data4"].iloc[x], "and $", monthly["fitted_data5"].iloc[x], " therefore our multiplier is ", weighted["sell"])
         totalDCA = totalDCA + buyAmount/monthly.Value.iloc[x]
-        totalRCA = totalRCA + buyAmount * weighted[4] / monthly.Value.iloc[x]
-        amount_invested_RCA = amount_invested_RCA + buyAmount * weighted[4]
+        totalRCA = totalRCA + buyAmount * weighted["sell"] / monthly.Value.iloc[x]
+        amount_invested_RCA = amount_invested_RCA + buyAmount * weighted["sell"]
         amount_invested_DCA = amount_invested_DCA + buyAmount
 
     else:
         print("Don't buy bitcoin")
         totalDCA = totalDCA + buyAmount/monthly.Value.iloc[x]
-        totalRCA = totalRCA + buyAmount * weighted[5] / monthly.Value.iloc[x]
-        amount_invested_RCA = amount_invested_RCA + buyAmount * weighted[5]
+        totalRCA = totalRCA + buyAmount * weighted["bubble"] / monthly.Value.iloc[x]
+        amount_invested_RCA = amount_invested_RCA + buyAmount * weighted["bubble"]
         amount_invested_DCA = amount_invested_DCA + buyAmount
 
 # This plots the locations of your buy points.
@@ -146,8 +146,8 @@ print("Purchase Amount: $", buyAmount)
 
 print("\n")
 print("Color Band Multipliers:")
-for i in range(-2, 7)[::-1]:
-    print(weighted[i])
+for key, value in weighted.items():
+    print(key, value)
 
 print("\n")
 totalDCADollars = monthly.Value.iloc[len(monthly) - 1] * totalDCA
